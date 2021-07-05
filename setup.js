@@ -1,12 +1,10 @@
-const fs = require('fs');
-const {resolve, join} = require('path');
+const {resolve} = require('path');
 const MongodbMemoryServer = require('mongodb-memory-server');
+const globalConfig = require('./global-config');
 const cwd = process.cwd();
 
 const debug = require('debug')('jest-mongodb:setup');
 const mongod = new MongodbMemoryServer.default(getMongodbMemoryOptions());
-
-const globalConfigPath = join(cwd, 'globalConfig.json');
 
 module.exports = async () => {
   if (!mongod.isRunning) {
@@ -22,7 +20,7 @@ module.exports = async () => {
   };
 
   // Write global config to disk because all tests run in different contexts.
-  fs.writeFileSync(globalConfigPath, JSON.stringify(mongoConfig));
+  await globalConfig.write(mongoConfig);
   debug('Config is written');
 
   // Set reference to mongod in order to close the server during teardown.

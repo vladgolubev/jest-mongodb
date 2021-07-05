@@ -1,13 +1,8 @@
 const NodeEnvironment = require('jest-environment-node');
-const path = require('path');
-const fs = require('fs');
 const uuid = require('uuid');
+const globalConfig = require('./global-config');
 
 const debug = require('debug')('jest-mongodb:environment');
-
-const cwd = process.cwd();
-
-const globalConfigPath = path.join(cwd, 'globalConfig.json');
 
 module.exports = class MongoEnvironment extends NodeEnvironment {
   constructor(config) {
@@ -17,10 +12,10 @@ module.exports = class MongoEnvironment extends NodeEnvironment {
   async setup() {
     debug('Setup MongoDB Test Environment');
 
-    const globalConfig = JSON.parse(fs.readFileSync(globalConfigPath, 'utf-8'));
+    const mongoConfig = await globalConfig.read();
 
-    this.global.__MONGO_URI__ = globalConfig.mongoUri;
-    this.global.__MONGO_DB_NAME__ = globalConfig.mongoDBName || uuid.v4();
+    this.global.__MONGO_URI__ = mongoConfig.mongoUri;
+    this.global.__MONGO_DB_NAME__ = mongoConfig.mongoDBName || uuid.v4();
 
     await super.setup();
   }
