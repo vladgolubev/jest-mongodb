@@ -47,7 +47,7 @@
     "uuid": "8.3.2"
   },
   "devDependencies": {
-    "@shelf/eslint-config": "1.5.0",
+    "@shelf/eslint-config": "1.6.2",
     "@shelf/prettier-config": "1.0.0",
     "eslint": "7.30.0",
     "husky": "4.3.8",
